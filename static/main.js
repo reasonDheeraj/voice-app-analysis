@@ -163,7 +163,7 @@ function __log(e, data) {
     recorder && recorder.exportWAV(function(blob) {
             var saveData = $.ajax({
             type: "POST",
-            url: "https://dashboard.heroku.com/apps/voice-emotional-analytics-api",
+            url: "https://voice-emotional-analytics-api.herokuapp.com/",
             data: blob,
             processData: false,
             contentType: false,
