@@ -1,6 +1,20 @@
+var clientIdForTheSession;
 var isRecording = false;
 var postId = 1;
 var confidenceArray = []
+var fileCount = 0;
+
+function byteToHex(byte) {
+  return ('0' + byte.toString(16)).slice(-2);
+}
+
+function generateId(len = 40) {
+  var arr = new Uint8Array(len / 2);
+  window.crypto.getRandomValues(arr);
+  return Array.from(arr, byteToHex).join("");
+}
+
+console.log(generateId())
 
 var radialObj = radialIndicator('#indicatorContainer', {
      barColor: {
@@ -125,7 +139,8 @@ function __log(e, data) {
     __log('Stopped recording.');
     // create WAV download link using audio data blob
     createDownloadLink();
-    recorder.clear();
+    if(recorder != undefined)
+      recorder.clear();
   }
   
 
@@ -134,8 +149,8 @@ function __log(e, data) {
     recorder && recorder.exportWAV(function(blob) {
             var saveData = $.ajax({
             type: "POST",
-             url: "https://voice-emotional-analytics-api.herokuapp.com/",
-            //url: "http://localhost:5000/",
+             url: "https://voice-emotional-analytics-api.herokuapp.com/" + clientIdForTheSession+ '_' + fileCount,
+            //url: "http://localhost:5000/" + clientIdForTheSession + '_' + fileCount,
             data: blob,
             processData: false,
             contentType: false,
@@ -143,11 +158,14 @@ function __log(e, data) {
               withCredentials: true
             },
             crossDomain: true,
+            'error' : function(request,error) {
+                        console.log(blob);
+                    },
             success: function(resultData){
                 console.log(resultData)
                 // var obj = JSON.parse(resultData);
                 // console.log(obj);
-
+                fileCount = fileCount + 1;
                     if(myChart.data.labels.length >10){
                         confidenceArray.push(resultData.confidence*100)
                         radialObj.animate(resultData.confidence*100);
@@ -167,7 +185,6 @@ function __log(e, data) {
                     }
             }
       });
-      console.log(blob);
     });
   }
   function startRecordingMic() {
@@ -236,22 +253,61 @@ function showUploadForm() {
  document.getElementById("myUploadForm").style.display = "block";
 }
 
+function sendFileName(fileName){
+$.ajax({
+
+    url : "https://voice-emotional-analytics-api.herokuapp.com/save/" +fileName+"/" + clientIdForTheSession,
+    type : 'GET',
+    data : {
+    },
+    dataType:'json',
+    success : function(data) {              
+        console.log('Data: '+data.location);
+    },
+    error : function(request,error)
+    {
+      console.log("Request: "+JSON.stringify(request));
+    }
+});
+}
+
+function removeFile(){
+$.ajax({
+
+    url :  "https://voice-emotional-analytics-api.herokuapp.com/remove/"+ clientIdForTheSession,
+    type : 'GET',
+    data : {
+    },
+    dataType:'json',
+    success : function(data) {              
+        console.log('Data: '+data);
+    },
+    error : function(request,error)
+    {
+      console.log("Request: "+JSON.stringify(request));
+    }
+});
+}
 
 function saveFile() {
  var filename = document.getElementById("fileToBeSaved").value;
  console.log(filename);
  if(filename !== ''){   
-    //wsh.send("command:storefile="+filename+"_server.wav" );
+    sendFileName(filename);
     console.log("Saving File");
-    closeForm();
+    document.getElementById("myForm").style.display = "none";
+    $(':input').val('');
+    resetEverything() 
     console.log("Closed Window");
     }
 }
 
 function closeForm() {
- document.getElementById("myForm").style.display = "none";
  console.log("Closing window");
+ document.getElementById("myForm").style.display = "none";
  stopRecord();
+ $(':input').val('');
+ removeFile();
  resetEverything() 
 }       
 function closeUploadForm() {
@@ -270,5 +326,13 @@ function resetEverything() {
  }
  myChart.update();
  stopRecord();  
+ clientIdForTheSession = generateId();
+ fileCount = 0;
  console.log("Reset Everything");
+}
+
+function myInitiateMic(){
+  startRecordingMic();
+  clientIdForTheSession = generateId();
+  console.log(clientIdForTheSession);
 }

@@ -5,9 +5,10 @@ Spyder Editor
 This is a temporary script file.
 """
 import os
+import glob
 import flask
 from flask import request,render_template
-from flask import jsonify, make_response
+from flask import jsonify, make_response, redirect
 import pickle
 import uuid
 import sys
@@ -21,6 +22,7 @@ sys.path.append("./api")
 import Vokaturi
 Vokaturi.load("./api/OpenVokaturi-3-3-linux64.so")
 #Vokaturi.load("./api/OpenVokaturi-3-3-win64.dll")
+import time
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -49,11 +51,11 @@ with open('logistic_regression_.pkl','rb') as f:
     print("Model loaded successfully")
 
 
-@app.route('/', methods=['POST'])
-def home():
+@app.route('/<clientId>', methods=['POST'])
+def home(clientId):
     if request.method == 'POST':
         print(type(request.data))
-        filename =  str(uuid.uuid4()) + '.wav'
+        filename =  clientId + '.wav'
         with open( filename, mode='wb') as f:
             f.write(request.data)
         print("file created")
@@ -61,6 +63,39 @@ def home():
         print("Confidence ............ " + str(conf))
         return make_response(jsonify({"confidence":float(conf)}), 200)
     return "Not POST"
+
+@app.route('/save/<filename>/<clientId>', methods=['GET'])
+def save(filename,clientId):
+    s = ''
+    if request.method == 'GET':
+        if '.' not in clientId:
+            time.sleep(4)
+            listOfFiles = glob.glob(clientId+"_*.wav")
+            print(listOfFiles)
+            fileCounter = 0
+            for wavFile in listOfFiles:
+                if s is '':
+                    s =  AudioSegment.from_wav(wavFile.split('_')[0]+'_'+ str(fileCounter) + '.wav')
+                else:
+                    s = s + AudioSegment.from_wav(wavFile.split('_')[0]+'_'+ str(fileCounter) + '.wav')
+                fileCounter = fileCounter + 1
+            s.export("static/"+str(filename)+".wav")
+            for file in listOfFiles:
+                os.remove(file)
+        return make_response(jsonify({"Status":"saved","location":"static/"+str(filename)+".wav"}), 200)
+    return "Not GET"
+
+@app.route('/remove/<clientId>', methods=['GET'])
+def cancel(clientId):
+    if request.method == 'GET':
+        if '.' not in clientId:
+            time.sleep(0.5)
+            listOfFiles = glob.glob(clientId+"_*.wav")
+            print(listOfFiles)
+            for file in listOfFiles:
+                os.remove(file)
+        return make_response(jsonify({"Status":"removed"}), 200)
+    return "Not GET"
 
 @app.route('/uploadfile',methods=['GET','POST'])
 def uploadfile():
@@ -92,7 +127,7 @@ def getGraphPoints(filename):
         chunk.export(chunk_name, format="wav")
         conf, nonconf = analyze(chunk_name)
         graphPoints.append(float(conf*100))
-        #os.remove(chunk_name)
+        os.remove(chunk_name)
     return(graphPoints) 
 
 
@@ -122,6 +157,9 @@ def analyze(filename):
     print(test_exm[0,0], test_exm[0,1])
     return normalize(test_exm[0,0]), test_exm[0,1]
 
+@app.route('/')
+def send_to_index():
+    return redirect("http://localhost:5000/static/index.html", code=302)
 
 def normalize(conf):
 
