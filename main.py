@@ -159,7 +159,7 @@ def analyze(filename):
 
 @app.route('/')
 def send_to_index():
-    return redirect("http://localhost:5000/static/index.html", code=302)
+    return redirect("https://voice-emotional-analytics-api.herokuapp.com/static/index.html", code=302)
 
 def normalize(conf):
 
