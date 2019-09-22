@@ -83,7 +83,7 @@ def not_found(error):
 def getGraphPoints(filename):
     myaudio = AudioSegment.from_file(filename , "wav") 
     duration = myaudio.__len__()
-    total_steps = 5
+    total_steps = 8
     step_size_seconds =  duration/total_steps
     chunks = make_chunks(myaudio, step_size_seconds) #Make chunks of one sec
     graphPoints = []
@@ -91,7 +91,7 @@ def getGraphPoints(filename):
         chunk_name = "chunk{0}.wav".format(i)
         chunk.export(chunk_name, format="wav")
         conf, nonconf = analyze(chunk_name)
-        graphPoints.append(float(conf))
+        graphPoints.append(float(conf*100))
         #os.remove(chunk_name)
     return(graphPoints) 
 

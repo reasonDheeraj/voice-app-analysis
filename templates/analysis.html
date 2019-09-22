@@ -17,14 +17,14 @@
           <div class="col-sm-8 col-md-7 py-4">
             <h4 class="text-white">Voxers</h4>
             <span type="hidden" id="encode"></span>
-            <p class="text-muted">Add some information about the application below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information. </p>
+            <p class="text-muted"></p>
           </div>
           <div class="col-sm-4 offset-md-1 py-4">
             <h4 class="text-white">Contact</h4>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled"><!-- 
               <li><a href="#" class="text-white">Follow on Twitter</a></li>
               <li><a href="#" class="text-white">Like on Facebook</a></li>
-              <li><a href="#" class="text-white">Email me</a></li>
+              <li><a href="#" class="text-white">Email me</a></li> -->
             </ul>
           </div>
         </div>
@@ -183,7 +183,7 @@
 var myChart = new Chart(contextGraph, {
   type: 'line',
   data: {
-    labels: [1,2,3,4,5],
+    labels: [1,2,3,4,5,6,7,8],
     datasets: [{
       data: {{graphPoints}},
       pointRadius: 0,
@@ -222,6 +222,11 @@ var myChart = new Chart(contextGraph, {
                 display: true,
                 labelString: 'Percentage'
             },
+                        ticks: {
+                        beginAtZero:true,
+                        min: 0,
+                        max: 100    
+                    },
         splitLine: {
                 show: false
             },
