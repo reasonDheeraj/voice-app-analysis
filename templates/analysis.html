@@ -1,0 +1,249 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src=static/radialIndicator.js></script>
+    <script src=static/chart-min.js></script>
+    <script src="static/audio.min.js"></script>
+    <link rel="stylesheet" href="static/recorder.css">   
+  </head>
+  <body>
+  <header>
+    <div class="collapse" id="navbarHeader">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">Voxers</h4>
+            <span type="hidden" id="encode"></span>
+            <p class="text-muted">Add some information about the application below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information. </p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Contact</h4>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-white">Follow on Twitter</a></li>
+              <li><a href="#" class="text-white">Like on Facebook</a></li>
+              <li><a href="#" class="text-white">Email me</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark shadow-sm">
+      <div class="container d-flex justify-content-between">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+          <img src="https://www.principalcdn.com/css/horizon/v2/logo-company-name-white.png" class="img-responsive center-block" alt="Principal">
+          <!-- <strong>Album</strong> -->
+        </a>
+        <span class="navbar-toggler-icon navbar-toggler" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        </span>      
+      </div>
+   </div>
+  </header>
+    <main role="main" class="inner cover main-component">
+      <div class="text-center app-logo ">
+        <img src='static/logo.png' width="80px" width="80px" />
+      </div>
+      <section class="jumbotron text-center custom-continer">
+        <div><hr width="80%"></div>
+        <div class="container" id="componentContent">
+            <div class="row justify-content-center vr none">
+            <div class="row justify-content-center vr">
+              <div class="col-sm-4">
+                  <div id="indicatorContainerWrap" class='confidence-component'>
+                      <div class="tag-name-main"><b>Confidence Score</b></div>
+                      <div class="rad-prg" id="indicatorConfidence"></div>
+                  </div>  
+              </div>
+              <div class="col-sm-8 float-right">
+                  <div class="row justify-content-center vr">
+                    <div id="indicatorContainerWrapHappy" class ="spinner-item">
+                        <div class="rad-prg" id="indicatorHappy"></div>
+                        <div class="tag-name">Happy</div>
+                    </div>  
+                      <div id="indicatorContainerWrapSad" class ="spinner-item">
+                         <div class="rad-prg" id="indicatorSad"></div>
+                         <div class="tag-name">Sad</div>
+                    </div>  
+                    <div id="indicatorContainerWrapNeutral" class ="spinner-item">
+                        <div class="rad-prg" id="indicatorNeutral"></div>
+                        <div class="tag-name">Neutral</div>
+                    </div>  
+                      <div id="indicatorContainerWrapFear" class ="spinner-item">
+                        <div class="rad-prg" id="indicatorFear"></div>
+                        <div class="tag-name">Fear</div>
+                    </div>  
+                    <div id="indicatorContainerWrapAnger" class ="spinner-item">
+                        <div class="rad-prg" id="indicatorAnger"></div>
+                        <div class="tag-name">Anger</div>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center my-chart-component">
+                    <div><canvas id="myLineChart"></canvas> </div>
+                    <div class="tag-name-chart">Variations In Confidence</div>
+                  </div>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+                <audio src="{{filePath}}" preload="auto" />
+             </div>
+        </div>
+      </section>
+    </main>
+    <script>
+    audiojs.events.ready(function() {
+    var as = audiojs.createAll();
+  });
+</script>
+<script type="text/javascript">
+  var radialObj1 = radialIndicator('#indicatorHappy', {
+     barColor: {
+        0: '#FF0000',
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
+    },
+    fontColor:'#464646',
+    radius: 25,
+    barWidth : 5,
+    initValue : {{progressbar.happy}},
+    percentage: true
+});
+  var radialObj2 = radialIndicator('#indicatorSad', {
+     barColor: {
+        0: '#FF0000',
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
+    },
+    fontColor:'#464646',
+    radius: 25,
+    barWidth : 5,
+    initValue : {{progressbar.sad}},
+    percentage: true
+});
+  var radialObj3 = radialIndicator('#indicatorNeutral', {
+     barColor: {
+        0: '#FF0000',
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
+    },
+    fontColor:'#464646',
+    radius: 25,
+    barWidth : 5,
+    initValue : {{progressbar.neutral}},
+    percentage: true
+});
+  var radialObj4 = radialIndicator('#indicatorFear', {
+     barColor: {
+        0: '#FF0000',
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
+    },
+    fontColor:'#464646',
+    radius: 25,
+    barWidth : 5,
+    initValue : {{progressbar.fear}},
+    percentage: true
+});
+  var radialObj5 = radialIndicator('#indicatorAnger', {
+     barColor: {
+        0: '#FF0000',
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
+    },
+    fontColor:'#464646',
+    radius: 25,
+    barWidth : 5,
+    initValue : {{progressbar.anger}},
+    percentage: true
+});
+  var radialObj = radialIndicator('#indicatorConfidence', {
+     barColor: {
+        0: '#FF0000',
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
+    },
+    //fontColor:'#464646',
+    radius: 90,
+    barWidth : 8,
+    initValue : {{progressbar.confidence}},
+    percentage: true
+});
+
+  var contextGraph = document.getElementById('myLineChart');
+
+// this post id drives the example data
+
+var myChart = new Chart(contextGraph, {
+  type: 'line',
+  data: {
+    labels: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+    datasets: [{
+      data: {{graphPoints}},
+      pointRadius: 0,
+      borderWidth: 2,
+      borderColor:'#00c0ef',
+    }]
+  },
+  options: {
+    grid: {show: false},
+    responsive: true,
+    title: {
+      //display: true,-
+      //text: "Chart.js - Dynamically Update Chart Via Ajax Requests",
+    },
+    legend: {
+      display: false
+    },
+    scales: {
+        xAxes: [{
+            display: true,
+            showGrid: false,
+            scaleLabel: {
+                display: false,
+                labelString: ''
+            },
+        splitLine: {
+                show: false
+            },
+        gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }],
+        yAxes: [{
+            display: true,
+            scaleLabel: {
+                display: true,
+                labelString: 'Percentage'
+            },
+        splitLine: {
+                show: false
+            },
+        gridLines: {
+                color: "rgba(0, 0, 0, 0)",
+            }
+        }]
+    }
+  }
+});
+</script>
+    <footer class="text-muted">
+      <div class="container">
+        <div align="center">  
+        <p>© 2019, Principal Financial Services, Inc.</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  </body>
+  <script src=static/handler.js></script>
+  <script src=static/main.js></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html> 

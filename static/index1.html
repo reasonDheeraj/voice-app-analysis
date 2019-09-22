@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src=smoothie.js></script>
+    <script src=radialIndicator.js></script>
+    <script src=chart-min.js></script>
+    <link rel="stylesheet" href="recorder.css">   
+  </head>
+  <body>
+  <header>
+    <div class="collapse" id="navbarHeader">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-8 col-md-7 py-4">
+            <h4 class="text-white">Voxers</h4>
+            <span type="hidden" id="encode"></span>
+            <p class="text-muted">Add some information about the application below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information. </p>
+          </div>
+          <div class="col-sm-4 offset-md-1 py-4">
+            <h4 class="text-white">Contact</h4>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-white">Follow on Twitter</a></li>
+              <li><a href="#" class="text-white">Like on Facebook</a></li>
+              <li><a href="#" class="text-white">Email me</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="navbar navbar-dark shadow-sm">
+      <div class="container d-flex justify-content-between">
+        <a href="#" class="navbar-brand d-flex align-items-center">
+          <img src="https://www.principalcdn.com/css/horizon/v2/logo-company-name-white.png" class="img-responsive center-block" alt="Principal">
+          <!-- <strong>Album</strong> -->
+        </a>
+        <span class="navbar-toggler-icon navbar-toggler" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        </span>      
+      </div>
+   </div>
+  </header>
+    <main role="main" class="inner cover main-component">
+      <div class="text-center app-logo">
+        <img src='logo.png' width="80px" width="80px" />
+        <hr width="80%">
+      </div>
+      <section class="jumbotron text-center">
+        <div class="container" id="componentContent">
+          <div class="jumbotron-heading inner-component"></div>
+            <div class="row">
+              <div class="col-sm">
+                <p>Confidence Score</p>
+                  <div id="indicatorContainerWrap">
+                      <div class="rad-prg" id="indicatorContainer"></div>
+                  </div>  
+              </div>
+              <div class="col-sm float-right">
+                <div><canvas id="myLineChart"></canvas> </div>
+              </div>
+            </div> 
+            <div class="row">
+              <div class="col-sm">
+                <div class="row justify-content-between">
+<button onclick="resetEverything()" class="resetEverything"><i class="fa fa-undo"></i></button>
+                        <button onclick="toggleRecord()" id="record"><i class="fa fa-microphone" aria-hidden="true"></i></button>
+
+      <button onclick="showUploadForm()" class="uploadFile"><i class="fa fa-cloud-upload"></i></button>
+                 <!--  <div class="col-sm-2 col-md-2 col-xs-4">
+                  <button onclick="resetEverything()" class="resetEverything"><i class="fas fa-cloud-upload-alt"></i></button>
+                  </div>
+                  <div class="col-sm-4 col-md-4 col-xs-4">
+                  <button onclick="toggleRecord()" id="record"><i class="fa fa-microphone" aria-hidden="true"></i></button>
+                </div>
+                <div class="col-sm-2 col-md-2 col-xs-4">
+                  <button onclick="showUploadForm()" class="uploadFile"><i class="fas fa-cloud-upload-alt"></i></button>
+                </div> -->
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="form-popup none" id="myForm">
+         <form class="form-container text-center">
+           <h3>Save File</h3>
+              <input type="text" class="form-control" placeholder="Enter file name" name="filename" id="fileToBeSaved" required>
+           <div id="file-logo-operation">
+            <span id = "operation"><i class="fa fa-paper-plane" onclick="saveFile()" aria-hidden="true"></i></span>
+            <span  id = "operation"><i class="fa fa-times-circle"  onclick="closeForm()" aria-hidden="true"></i></span>
+            <p></p>
+            <p></p>
+           </div>
+         </form>
+        </div>
+        <div class="form-popup none" id="myUploadForm">
+         <form enctype="multipart/form-data" action="/upload" method="post" class="form-container    text-center">  
+           <h4>Analyze File</h4>
+           <hr>
+           <p>You can upload a .wav file from here to get the analysis.</p>
+           <input type="file" class="form-control" name="file1" />
+           <div class="row text-center">
+             <div class="col-xs-6 col-sm-6">
+              <input type="submit" value="upload">  
+              </input>
+             </div>
+             <div class="col-xs-6 col-sm-6"><span id = "uploadOperation"><i class="fa fa-times-circle" onclick="closeUploadForm()" aria-hidden="true"></i></span></div>
+           </div>
+         </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="text-muted">
+      <div class="container">
+        <div align="center">  
+        <p>Audio Analyzer for Principal @CodeJam
+        <br>© 2019, Principal Financial Services, Inc.
+        <br>Securities offered through Principal Securities, Inc., member SIPC</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  </body>
+  <script src=libopus.js></script>
+  <script src=opus.js></script>
+  <script src=handler.js></script>
+  <script src=main.js></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html> 
