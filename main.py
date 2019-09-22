@@ -19,8 +19,8 @@ from confidence_prediction import test_example
 import random
 sys.path.append("./api")
 import Vokaturi
-#Vokaturi.load("./api/OpenVokaturi-3-3-linux64.so")
-Vokaturi.load("./api/OpenVokaturi-3-3-win64.dll")
+Vokaturi.load("./api/OpenVokaturi-3-3-linux64.so")
+#Vokaturi.load("./api/OpenVokaturi-3-3-win64.dll")
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
