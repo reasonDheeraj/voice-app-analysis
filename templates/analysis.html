@@ -61,7 +61,7 @@
               </div>
               <div class="col-sm-8 float-right">
                   <div class="row justify-content-center vr">
-                    <div id="indicatorContainerWrapHappy" class ="spinner-item">
+                    <!-- <div id="indicatorContainerWrapHappy" class ="spinner-item">
                         <div class="rad-prg" id="indicatorHappy"></div>
                         <div class="tag-name">Happy</div>
                     </div>  
@@ -80,7 +80,7 @@
                     <div id="indicatorContainerWrapAnger" class ="spinner-item">
                         <div class="rad-prg" id="indicatorAnger"></div>
                         <div class="tag-name">Anger</div>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="row justify-content-center my-chart-component">
                     <div><canvas id="myLineChart"></canvas> </div>
@@ -168,13 +168,13 @@
   var radialObj = radialIndicator('#indicatorConfidence', {
      barColor: {
         0: '#FF0000',
-        33: '#FFFF00',
-        66: '#0066FF',
-        100: '#33CC33'
+        33: '#f4c430',
+        66: '#FFA500',
+        100: '#008000'
     },
     //fontColor:'#464646',
     radius: 90,
-    barWidth : 8,
+    barWidth : 15,
     initValue : {{progressbar.confidence}},
     percentage: true
 });

@@ -136,7 +136,12 @@ def upload():
     f = request.files['file']
     f.save("static/"+f.filename)
     conf, nonconf = analyze("static/"+f.filename)
-    neutral,happy,sad,anger,fear = analyze_emotions("static/"+f.filename)
+    #neutral,happy,sad,anger,fear = analyze_emotions("static/"+f.filename)
+    neutral = 0.5
+    happy = 0.5
+    sad = 0.5
+    anger =0.5
+    fear = 0.5
     progressbar = {} 
     progressbar["confidence"] = float(conf*100)
     progressbar["happy"] = float(happy*100)
