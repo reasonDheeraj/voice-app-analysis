@@ -29,7 +29,7 @@ app.config["DEBUG"] = True
 
 def analyze_emotions(file_name):
     (sample_rate, samples) = scipy.io.wavfile.read(file_name)
-    print ("   sample rate %.3f Hz" % sample_rate)
+    #print ("   sample rate %.3f Hz" % sample_rate)
     buffer_length = len(samples)
     c_buffer = Vokaturi.SampleArrayC(buffer_length)
     if samples.ndim == 1:  # mono
@@ -54,13 +54,13 @@ with open('logistic_regression_.pkl','rb') as f:
 @app.route('/<clientId>', methods=['POST'])
 def home(clientId):
     if request.method == 'POST':
-        print(type(request.data))
+        #print(type(request.data))
         filename =  clientId + '.wav'
         with open( filename, mode='wb') as f:
             f.write(request.data)
-        print("file created")
+        #print("file created")
         conf, nonconf = analyze( filename)
-        print("Confidence ............ " + str(conf))
+        #print("Confidence ............ " + str(conf))
         return make_response(jsonify({"confidence":float(conf)}), 200)
     return "Not POST"
 
@@ -71,7 +71,7 @@ def save(filename,clientId):
         if '.' not in clientId:
             time.sleep(4)
             listOfFiles = glob.glob(clientId+"_*.wav")
-            print(listOfFiles)
+            #print(listOfFiles)
             fileCounter = 0
             for wavFile in listOfFiles:
                 if s is '':
@@ -91,7 +91,7 @@ def cancel(clientId):
         if '.' not in clientId:
             time.sleep(0.5)
             listOfFiles = glob.glob(clientId+"_*.wav")
-            print(listOfFiles)
+            #print(listOfFiles)
             for file in listOfFiles:
                 os.remove(file)
         return make_response(jsonify({"Status":"removed"}), 200)
@@ -144,7 +144,7 @@ def upload():
     progressbar["neutral"] = float(neutral*100)
     progressbar["fear"] = float(fear*100)
     progressbar["anger"] = float(anger*100)
-    print(progressbar)
+    #print(progressbar)
     filePath = "static/"+f.filename
     graphPoints = getGraphPoints("static/"+f.filename)
     return render_template('analysis.html', title='Voxers - Analysis', progressbar=progressbar, filePath = filePath, graphPoints = graphPoints)
@@ -162,8 +162,7 @@ def send_to_index():
     return redirect("https://voice-emotional-analytics-api.herokuapp.com/static/index.html", code=302)
 
 def normalize(conf):
-
-   print("from normalize "+ str(conf))  
+   #print("from normalize "+ str(conf))  
    if(conf*100 > 95):
        return (random.randrange(50, 100)*conf/100)
    elif(conf*100 < 15):
