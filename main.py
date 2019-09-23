@@ -5,10 +5,9 @@ Spyder Editor
 This is a temporary script file.
 """
 import os
-import glob
 import flask
 from flask import request,render_template
-from flask import jsonify, make_response, redirect
+from flask import jsonify, make_response
 import pickle
 import uuid
 import sys
@@ -20,16 +19,15 @@ from confidence_prediction import test_example
 import random
 sys.path.append("./api")
 import Vokaturi
-Vokaturi.load("./api/OpenVokaturi-3-3-linux64.so")
-#Vokaturi.load("./api/OpenVokaturi-3-3-win64.dll")
-import time
+#Vokaturi.load("./api/OpenVokaturi-3-3-linux64.so")
+Vokaturi.load("./api/OpenVokaturi-3-3-win64.dll")
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 def analyze_emotions(file_name):
     (sample_rate, samples) = scipy.io.wavfile.read(file_name)
-    #print ("   sample rate %.3f Hz" % sample_rate)
+    print ("   sample rate %.3f Hz" % sample_rate)
     buffer_length = len(samples)
     c_buffer = Vokaturi.SampleArrayC(buffer_length)
     if samples.ndim == 1:  # mono
@@ -51,51 +49,18 @@ with open('logistic_regression_.pkl','rb') as f:
     print("Model loaded successfully")
 
 
-@app.route('/<clientId>', methods=['POST'])
-def home(clientId):
+@app.route('/', methods=['POST'])
+def home():
     if request.method == 'POST':
-        #print(type(request.data))
-        filename =  clientId + '.wav'
+        print(type(request.data))
+        filename =  str(uuid.uuid4()) + '.wav'
         with open( filename, mode='wb') as f:
             f.write(request.data)
-        #print("file created")
+        print("file created")
         conf, nonconf = analyze( filename)
-        #print("Confidence ............ " + str(conf))
+        print("Confidence ............ " + str(conf))
         return make_response(jsonify({"confidence":float(conf)}), 200)
     return "Not POST"
-
-@app.route('/save/<filename>/<clientId>', methods=['GET'])
-def save(filename,clientId):
-    s = ''
-    if request.method == 'GET':
-        if '.' not in clientId:
-            time.sleep(4)
-            listOfFiles = glob.glob(clientId+"_*.wav")
-            #print(listOfFiles)
-            fileCounter = 0
-            for wavFile in listOfFiles:
-                if s is '':
-                    s =  AudioSegment.from_wav(wavFile.split('_')[0]+'_'+ str(fileCounter) + '.wav')
-                else:
-                    s = s + AudioSegment.from_wav(wavFile.split('_')[0]+'_'+ str(fileCounter) + '.wav')
-                fileCounter = fileCounter + 1
-            s.export("static/"+str(filename)+".wav")
-            for file in listOfFiles:
-                os.remove(file)
-        return make_response(jsonify({"Status":"saved","location":"static/"+str(filename)+".wav"}), 200)
-    return "Not GET"
-
-@app.route('/remove/<clientId>', methods=['GET'])
-def cancel(clientId):
-    if request.method == 'GET':
-        if '.' not in clientId:
-            time.sleep(0.5)
-            listOfFiles = glob.glob(clientId+"_*.wav")
-            #print(listOfFiles)
-            for file in listOfFiles:
-                os.remove(file)
-        return make_response(jsonify({"Status":"removed"}), 200)
-    return "Not GET"
 
 @app.route('/uploadfile',methods=['GET','POST'])
 def uploadfile():
@@ -127,7 +92,7 @@ def getGraphPoints(filename):
         chunk.export(chunk_name, format="wav")
         conf, nonconf = analyze(chunk_name)
         graphPoints.append(float(conf*100))
-        os.remove(chunk_name)
+        #os.remove(chunk_name)
     return(graphPoints) 
 
 
@@ -136,12 +101,7 @@ def upload():
     f = request.files['file']
     f.save("static/"+f.filename)
     conf, nonconf = analyze("static/"+f.filename)
-    #neutral,happy,sad,anger,fear = analyze_emotions("static/"+f.filename)
-    neutral = 0.5
-    happy = 0.5
-    sad = 0.5
-    anger =0.5
-    fear = 0.5
+    neutral,happy,sad,anger,fear = analyze_emotions("static/"+f.filename)
     progressbar = {} 
     progressbar["confidence"] = float(conf*100)
     progressbar["happy"] = float(happy*100)
@@ -149,7 +109,7 @@ def upload():
     progressbar["neutral"] = float(neutral*100)
     progressbar["fear"] = float(fear*100)
     progressbar["anger"] = float(anger*100)
-    #print(progressbar)
+    print(progressbar)
     filePath = "static/"+f.filename
     graphPoints = getGraphPoints("static/"+f.filename)
     return render_template('analysis.html', title='Voxers - Analysis', progressbar=progressbar, filePath = filePath, graphPoints = graphPoints)
@@ -162,12 +122,10 @@ def analyze(filename):
     print(test_exm[0,0], test_exm[0,1])
     return normalize(test_exm[0,0]), test_exm[0,1]
 
-@app.route('/')
-def send_to_index():
-    return redirect("https://voice-emotional-analytics-api.herokuapp.com/static/index.html", code=302)
 
 def normalize(conf):
-   #print("from normalize "+ str(conf))  
+
+   print("from normalize "+ str(conf))  
    if(conf*100 > 95):
        return (random.randrange(50, 100)*conf/100)
    elif(conf*100 < 15):

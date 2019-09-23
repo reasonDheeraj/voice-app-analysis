@@ -8,8 +8,9 @@
     <script src=static/chart-min.js></script>
     <script src="static/audio.min.js"></script>
     <link rel="stylesheet" href="static/recorder.css">   
+  <title>Vaas</title>
   </head>
-  <title>VaaS</title>
+  
   <body>
   <header>
     <div class="collapse" id="navbarHeader">
@@ -33,9 +34,8 @@
     </div>
     <div class="navbar navbar-dark shadow-sm">
       <div class="container d-flex justify-content-between">
-        <a href="/"><i class="fa fa-arrow-left" style="font-size:25px;color:white"></i></a>
+        <a href="https://voice-emotional-analytics-api.herokuapp.com/static/index.html"><i class="fa fa-arrow-left" style="font-size:25px;color:white"></i></a>
         <a href="#" class="navbar-brand d-flex align-items-center">
-
           <img src="https://www.principalcdn.com/css/horizon/v2/logo-company-name-white.png" class="img-responsive center-block" alt="Principal">
           <!-- <strong>Album</strong> -->
         </a>
@@ -61,28 +61,7 @@
               </div>
               <div class="col-sm-8 float-right">
                   <div class="row justify-content-center vr">
-                    <!-- <div id="indicatorContainerWrapHappy" class ="spinner-item">
-                        <div class="rad-prg" id="indicatorHappy"></div>
-                        <div class="tag-name">Happy</div>
-                    </div>  
-                      <div id="indicatorContainerWrapSad" class ="spinner-item">
-                         <div class="rad-prg" id="indicatorSad"></div>
-                         <div class="tag-name">Sad</div>
-                    </div>  
-                    <div id="indicatorContainerWrapNeutral" class ="spinner-item">
-                        <div class="rad-prg" id="indicatorNeutral"></div>
-                        <div class="tag-name">Neutral</div>
-                    </div>  
-                      <div id="indicatorContainerWrapFear" class ="spinner-item">
-                        <div class="rad-prg" id="indicatorFear"></div>
-                        <div class="tag-name">Fear</div>
-                    </div>  
-                    <div id="indicatorContainerWrapAnger" class ="spinner-item">
-                        <div class="rad-prg" id="indicatorAnger"></div>
-                        <div class="tag-name">Anger</div>
-                    </div> -->
-                    <br>
-                  </div>
+                    
                   <div class="row justify-content-center my-chart-component">
                     <div><canvas id="myLineChart"></canvas> </div>
                     <div class="tag-name-chart">Variations In Confidence</div>
@@ -169,13 +148,13 @@
   var radialObj = radialIndicator('#indicatorConfidence', {
      barColor: {
         0: '#FF0000',
-        33: '#f4c430',
-        66: '#FFA500',
-        100: '#008000'
+        33: '#FFFF00',
+        66: '#0066FF',
+        100: '#33CC33'
     },
     //fontColor:'#464646',
     radius: 90,
-    barWidth : 15,
+    barWidth : 8,
     initValue : {{progressbar.confidence}},
     percentage: true
 });
